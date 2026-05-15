@@ -65,8 +65,9 @@
   .panel.active { display: block; }
 
   .section-intro { margin-bottom: 1.75rem; }
-  .section-intro h2 { font-size: 22px; font-weight: 800; color: var(--green); margin-bottom: 4px; }
-  .section-intro p { font-size: 13px; color: var(--gray-text); }
+  .section-intro .section-tag { display: inline-block; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green-dark); background: var(--green-light); border: 1px solid var(--green-mid); padding: 3px 10px; border-radius: 99px; margin-bottom: 8px; }
+  .section-intro h2 { font-size: 30px; font-weight: 900; color: var(--dark); margin-bottom: 6px; line-height: 1.1; }
+  .section-intro p { font-size: 14px; color: var(--gray-text); line-height: 1.5; }
 
   .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.75rem; }
   .stat-card { background: var(--white); border: 0.5px solid var(--border); border-top: 3px solid var(--green); border-radius: var(--radius-lg); padding: 14px 16px; text-align: center; }
@@ -178,6 +179,7 @@
 
   <div class="panel active" id="panel-parking">
     <div class="section-intro">
+      <div class="section-tag">Q Planning Q2 · 2026</div>
       <h2>Parking Lot</h2>
       <p>Dejá tu consulta, dependencia o tema a profundizar. Lo abordaremos durante el encuentro o quedará agendado.</p>
     </div>
@@ -269,6 +271,7 @@
 
   <div class="panel" id="panel-retro">
     <div class="section-intro">
+      <div class="section-tag">Q Planning Q2 · 2026</div>
       <h2>Retro de cierre</h2>
       <p>Antes de concluir, dedicamos unos minutos a reflexionar sobre este encuentro. Tu opinión es clave para continuar fortaleciendo el espacio de Q Planning.</p>
     </div>
@@ -324,7 +327,12 @@
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('tab-'+tab).classList.add('active');
     document.getElementById('panel-'+tab).classList.add('active');
+    window.location.hash = tab;
   }
+  (function initTab() {
+    const hash = window.location.hash.replace('#','');
+    if (hash === 'retro' || hash === 'parking') switchTab(hash);
+  })();
   function selectType(type,el) {
     selectedType=type;
     document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
