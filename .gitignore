@@ -1,0 +1,5 @@
+docs/superpowers/
+apps-script.gs
+*.log
+.DS_Store
+Thumbs.db
