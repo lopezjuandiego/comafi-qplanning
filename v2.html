@@ -601,7 +601,7 @@
     const bc={consulta:'badge-teal',profundizar:'badge-blue',dependencia:'badge-amber'};
     const lc={consulta:'#7DB9A7',profundizar:'#008AC9',dependencia:'#BA7517'};
     list.innerHTML=parkingItems.map(item=>{
-      const hm=item.time.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+      const d=item.time,hm=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getFullYear()).slice(-2);
       return '<div class="parking-item" style="border-left-color:'+lc[item.type]+'">'
         +'<div class="parking-item-top">'
         +'<span class="badge badge-green">'+item.celula+'</span>'
