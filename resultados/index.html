@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resultados Q Planning Q2 — Banco Comafi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #42A905;
+    --green-dark: #2e7a03;
+    --green-light: #e8f7df;
+    --green-mid: #c6edaa;
+    --orange: #E8820C;
+    --orange-light: #fef0e0;
+    --gray-text: #606060;
+    --gray-light: #F0F0EF;
+    --blue: #008AC9;
+    --blue-light: #e0f3fc;
+    --dark: #1e1e1e;
+    --dark2: #414141;
+    --white: #ffffff;
+    --border: rgba(0,0,0,0.07);
+    --border2: rgba(0,0,0,0.14);
+    --radius-sm: 5px;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--gray-light);
+    color: var(--dark2);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: #111111;
+    border-bottom: 2.5px solid var(--green);
+    padding: 0 2.5rem;
+    display: flex;
+    align-items: stretch;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.35);
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    padding: 10px 1.75rem 10px 0;
+    border-right: 1px solid rgba(255,255,255,0.10);
+    margin-right: 1.75rem;
+  }
+  .header-logo img { height: 36px; width: auto; display: block; }
+  .header-title { display: flex; align-items: center; gap: 10px; padding: 12px 0; margin-right: auto; }
+  .header-title h1 { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.55); letter-spacing: 0.04em; text-transform: uppercase; }
+  .q2-pill {
+    background: var(--green); color: #fff;
+    font-size: 10px; font-weight: 800;
+    padding: 3px 9px; border-radius: 99px;
+    letter-spacing: 0.08em;
+  }
+  .refresh-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.75);
+    font-family: inherit; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 7px 14px; border-radius: var(--radius-md);
+    cursor: pointer; align-self: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .refresh-btn:hover { background: rgba(255,255,255,0.13); color: #fff; }
+  .refresh-btn i { font-size: 15px; }
+  .refresh-btn.spinning i { animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── LAYOUT ── */
+  main { max-width: 960px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+  /* ── SECTION INTRO ── */
+  .section-intro { margin-bottom: 2rem; }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--green-dark);
+    background: var(--green-light); border: 1px solid var(--green-mid);
+    padding: 4px 12px; border-radius: 99px; margin-bottom: 10px;
+  }
+  .section-intro h2 {
+    font-size: 36px; font-weight: 900; color: var(--dark);
+    margin-bottom: 8px; line-height: 1.05; letter-spacing: -0.02em;
+  }
+  .section-intro p { font-size: 14px; color: var(--gray-text); max-width: 560px; }
+
+  /* ── METRICS BAR ── */
+  .metrics-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 3rem;
+  }
+  .metric-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 16px 16px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+  }
+  .metric-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .metric-card.mc-green::before { background: var(--green); }
+  .metric-card.mc-blue::before  { background: var(--blue); }
+  .metric-card.mc-orange::before { background: var(--orange); }
+  .metric-num {
+    font-size: 34px; font-weight: 900; line-height: 1;
+    margin-bottom: 5px; letter-spacing: -0.02em;
+  }
+  .mc-green .metric-num { color: var(--green); }
+  .mc-blue  .metric-num { color: var(--blue); }
+  .mc-orange .metric-num { color: var(--orange); }
+  .metric-lbl {
+    font-size: 10px; font-weight: 700; color: var(--gray-text);
+    text-transform: uppercase; letter-spacing: 0.07em;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 1.25rem; padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--green-light);
+  }
+  .section-header h3 {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--green);
+  }
+  .section-header i { font-size: 17px; color: var(--green); }
+  .section-header .count-pill {
+    margin-left: auto;
+    background: var(--green-light); color: var(--green-dark);
+    font-size: 10px; font-weight: 800;
+    padding: 2px 9px; border-radius: 99px;
+  }
+
+  /* ── PARKING LOT ── */
+  .parking-section { margin-bottom: 3rem; }
+  .celulas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .celula-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .celula-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border);
+  }
+  .celula-name {
+    font-size: 12px; font-weight: 800; color: var(--dark);
+    letter-spacing: 0.01em;
+  }
+  .celula-count {
+    font-size: 10px; font-weight: 700; color: var(--gray-text);
+    background: var(--gray-light);
+    padding: 2px 8px; border-radius: 99px;
+  }
+  .celula-items { padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+  .pl-item { display: flex; flex-direction: column; gap: 4px; }
+  .pl-item p { font-size: 12.5px; color: var(--dark); line-height: 1.55; font-weight: 500; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block;
+    font-size: 10px; font-weight: 800; padding: 2px 8px;
+    border-radius: 4px; letter-spacing: 0.02em;
+    align-self: flex-start;
+  }
+  .badge-blue   { background: var(--blue-light); color: #005a84; }
+  .badge-green  { background: var(--green-light); color: var(--green-dark); }
+  .badge-orange { background: var(--orange-light); color: #a35500; }
+
+  /* ── RETRO SECTION ── */
+  .retro-section { margin-bottom: 3rem; }
+  .retro-cols {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 14px;
+  }
+  .retro-col {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .retro-col-title {
+    font-size: 10px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .retro-col-title i { font-size: 17px; }
+  .retro-col-title.green { color: var(--green-dark); }
+  .retro-col-title.blue  { color: var(--blue); }
+
+  /* Rating chart */
+  .avg-display { text-align: center; margin-bottom: 1.5rem; }
+  .avg-number {
+    font-size: 52px; font-weight: 900; color: var(--green);
+    line-height: 1; letter-spacing: -0.03em;
+  }
+  .avg-denom { font-size: 16px; color: var(--gray-text); font-weight: 600; }
+  .avg-label {
+    font-size: 11px; color: var(--gray-text); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px;
+  }
+  .rating-bars { display: flex; flex-direction: column; gap: 7px; }
+  .rating-row {
+    display: grid;
+    grid-template-columns: 48px 1fr 24px;
+    align-items: center; gap: 8px;
+  }
+  .rating-stars { font-size: 11px; color: var(--green); letter-spacing: 1px; }
+  .bar-track {
+    height: 8px; border-radius: 99px;
+    background: var(--gray-light); overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 99px; background: var(--green);
+    transition: width 0.6s ease;
+  }
+  .bar-count { font-size: 11px; font-weight: 700; color: var(--gray-text); text-align: right; }
+
+  /* Comments */
+  .comments-group { display: flex; flex-direction: column; gap: 10px; }
+  .comments-label {
+    font-size: 10px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .comments-label.green { color: var(--green-dark); }
+  .comments-label.blue  { color: var(--blue); }
+  .comment-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: #fafafa; border: 1px solid var(--border);
+    border-radius: var(--radius-md); padding: 10px 14px;
+    font-size: 13px; color: var(--dark); line-height: 1.55;
+    font-weight: 500; box-shadow: var(--shadow-sm);
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .dot.green { background: var(--green); }
+  .dot.blue  { background: var(--blue); }
+
+  /* ── ESTADOS ── */
+  .state-center {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 5rem 1rem;
+    text-align: center; gap: 12px;
+  }
+  .state-center i { font-size: 40px; color: var(--green-mid); }
+  .state-center p { font-size: 14px; color: var(--gray-text); font-weight: 500; }
+  .state-center.error i { color: #e05050; }
+  .state-center.error p { color: #a03030; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+    .retro-cols { grid-template-columns: 1fr; }
+    .celulas-grid { grid-template-columns: 1fr; }
+    header { padding: 0 1rem; }
+    .header-title h1 { display: none; }
+    main { padding: 1.5rem 1rem; }
+    .section-intro h2 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo">
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACbAnkDASIAAhEBAxEB/8QAHAABAAICAwEAAAAAAAAAAAAAAAYHBQgCAwQB/8QAURAAAQMDAQMIAwkKDQUAAwAAAQACAwQFEQYHEiEIEzFBUWFxgRQikRUyNjZywdEWJENUYnN1kpOUosLSJTNEU+Fj4vD/xAAaAQEAAwEBAQAAAAAAAAAAAAAAAQIDBAUG/8QANBEAAgICAAMGBAQFBQAAAAAAAAECAwQREiExBRMyQVHwgaGx0RQiQnEVIzM04VJTYZHx/9oADAMBAAIRAxEAPwDTJERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREARF6qW319VC6akeOkOGCFxQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAFyjY+R7WRtc97jhrWjJJ7FN9kuzK/bQrk5lEPRLZA4Cqr5Gksj/otH5T+4eeFtdobZrpXRNM0Wi3tkrAMPrqgB87z14PQ0dzcea87M7Sqxnw9Zen3KuSRqdY9lWvbvEyaHT89PC/iJKtwhHscQfmV/bB9PXHQuma63XzcE9RWc+wU0m+A3ca3ieHHIVm1sZ4k8SsVJDvBxx1rzK+1Lb58LSSKOTZ13ODTF5jMN1oaKqaeGKuda7BNM3aF9VpqodaKk8WtDjLTuPZj3zfInwU6qoMZ4LxRz1VFLzlLK6M9Y6j4jrXZDIlFlU2jU7WukL/o+5eg3yhdA52TFK31opR2sd0Hw6R1gLArd+shsms7PNZL5RRyiQcYjwyfz43dLXD/+yFqrta2f1+g776O9zqm21BLqOq3cb4HS13Y8dY8x0r0arlM0jLZCkRFuXCIiAIiIAiIgCIiAs3Yroqx6so7pLeG1LnU0kbY+al3ODg7OeB7ArBOyDRAOC2uB7DWAfsWB5Mn4Nvv9dD9D1Btuf4zrp4Q/ZNXjy723KlXGbSX+DLm5NbLVOx7RD/Vaa8E9G7VtJ+qsFqjYjTeiyS6cuM/pLcltNV4If3B4AwfEexUkx7mODmOLXDoIOCr75PWo7ld7dcbXcqiSq9B5t8Ekjt5wa7ILSesAjI8Sl9eTjR7xWb16iSlFb2UPVU81LUy01TE+KaJ5ZIxwwWuBwQV1KxeULRw020J00TQ11VSRzSY63cWk+YaFXS9Omzva1P1NE9rZ9aC4hrQSTwAHWtgbBsd037i0Ruza51e6Frqjcn3Wh5GS0DHVnHkq12J6f93dcUz5mb1JQfxqbhwJafUb5ux5Aq3tZa3bZtomn7GZQIJ8muPZznqx58D63gV5+ddY5qqp80tszm3vSKL2jae/gxq+ttTN807SJKdz+l0bhlvjjo8QVHVfPKPsHpNkpL/Ez77RP5ifA6Y3n1T5O4fKVDLrw7u+pUn18y8HtHu0/SxVt+t9HPvc1PVRRP3Tg7rnAHHkVsE7Y7ooPI5q44B/nX/6qg9IfCyz/HoPtGrZvaDqMaXpaC4ytDqV9wZBUjHERua7Lh3ggHyXH2jO1WRjW9bKWN7SRrhtA03PpXU9LapduCpqtBp37rQXMZA4kj1x5gj2qi9R29l01VV2+TIiqJTIn7Pa5pX1DqW0yVFLYqSthqLPQT1cs8dJFT84+KJzsgu3iXOI9YkqtKKGFkElMIWiB7C0xu6WEdWFaqF7iFbFW+Jxla5GpbHdLRW+h3W1UVUJBljTIMkY64HNLeI6iCFGlNNiGlqapL9WUDS1jGCGC4VtbK1zHFwD2TTyEAANxvDdBPDgrE7R9H3DWdqpaGinpo5op2yl1QXBpDgQcboPUuD7kuo/RKP4yo/8AvK4UbzTq4oqclaWx5dT5OOv6WslqHajqKd4NMaGrz99p2OhGQCN09OwcMYHatVkWSFJMQiIoJCIiAIiIAiIgCIiA7IJ54QRDU1EQPECaTH0rwVdRU1EZjqaiWZhGC2SR7h9RXGiagJCIikAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiA//9k=" alt="Banco Comafi">
+  </div>
+  <div class="header-title">
+    <h1>Resultados Q Planning</h1>
+    <span class="q2-pill">Q2</span>
+  </div>
+  <button class="refresh-btn" id="refresh-btn" onclick="loadData()">
+    <i class="ti ti-refresh" id="refresh-icon"></i> Actualizar
+  </button>
+</header>
+
+<main>
+  <div id="state-loading" class="state-center">
+    <i class="ti ti-loader-2" style="animation:spin 1s linear infinite;font-size:40px;color:var(--green)"></i>
+    <p>Cargando datos...</p>
+  </div>
+  <div id="state-error" class="state-center error" style="display:none">
+    <i class="ti ti-alert-circle"></i>
+    <p id="error-msg">No se pudo cargar la información.</p>
+  </div>
+
+  <div id="content" style="display:none">
+
+    <div class="section-intro">
+      <div class="section-tag">Q Planning Q2 · 2026</div>
+      <h2>Resultados del encuentro</h2>
+      <p>Datos en vivo del Parking Lot y la Retro de cierre.</p>
+    </div>
+
+    <div class="metrics-bar">
+      <div class="metric-card mc-green">
+        <div class="metric-num" id="m-total">—</div>
+        <div class="metric-lbl">Parking Lot</div>
+      </div>
+      <div class="metric-card mc-blue">
+        <div class="metric-num" id="m-consulta">—</div>
+        <div class="metric-lbl">Consultas</div>
+      </div>
+      <div class="metric-card mc-green">
+        <div class="metric-num" id="m-profundizar">—</div>
+        <div class="metric-lbl">A profundizar</div>
+      </div>
+      <div class="metric-card mc-orange">
+        <div class="metric-num" id="m-dependencia">—</div>
+        <div class="metric-lbl">Dependencias</div>
+      </div>
+    </div>
+
+    <section class="parking-section">
+      <div class="section-header">
+        <i class="ti ti-parking"></i>
+        <h3>Parking Lot</h3>
+        <span class="count-pill" id="pl-count-pill">0 ítems</span>
+      </div>
+      <div class="celulas-grid" id="celulas-grid"></div>
+    </section>
+
+    <section class="retro-section">
+      <div class="section-header">
+        <i class="ti ti-mood-check"></i>
+        <h3>Retro de cierre</h3>
+        <span class="count-pill" id="retro-count-pill">0 respuestas</span>
+      </div>
+      <div class="retro-cols">
+        <div class="retro-col">
+          <div class="retro-col-title green">
+            <i class="ti ti-star-filled"></i> Rating
+          </div>
+          <div class="avg-display">
+            <div><span class="avg-number" id="avg-number">—</span><span class="avg-denom"> / 5</span></div>
+            <div class="avg-label">Promedio</div>
+          </div>
+          <div class="rating-bars" id="rating-bars"></div>
+        </div>
+        <div class="retro-col">
+          <div class="retro-col-title green">
+            <i class="ti ti-thumb-up"></i> ¿Qué fue útil?
+          </div>
+          <div class="comments-group" id="util-comments"></div>
+          <div class="comments-group" id="mejora-comments" style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+            <div class="comments-label blue"><i class="ti ti-tool" style="font-size:14px"></i> ¿Qué mejorarías?</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6sb4aAeGTE_2NjFbeu9uLT1ZXHPIEmFvItKVfmIl6Iou7sdUaaqUk3j0_fxLbD1XOYA/exec';
+
+  const TYPE_LABEL = { consulta: 'Consulta', profundizar: 'A profundizar', dependencia: 'Dependencia' };
+  const TYPE_BADGE = { consulta: 'badge-blue', profundizar: 'badge-green', dependencia: 'badge-orange' };
+
+  async function loadData() {
+    const btn  = document.getElementById('refresh-btn');
+    const icon = document.getElementById('refresh-icon');
+    btn.disabled = true;
+    icon.classList.add('spinning');
+    show('state-loading');
+    hide('state-error');
+    hide('content');
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      renderAll(data.parkingLot || [], data.retro || []);
+      hide('state-loading');
+      show('content');
+    } catch (err) {
+      hide('state-loading');
+      document.getElementById('error-msg').textContent =
+        'No se pudo cargar la información. (' + err.message + ')';
+      show('state-error');
+    } finally {
+      btn.disabled = false;
+      icon.classList.remove('spinning');
+    }
+  }
+
+  function renderAll(pl, retro) {
+    renderMetrics(pl, retro);
+    renderParking(pl);
+    renderRetro(retro);
+  }
+
+  function renderMetrics(pl, retro) {
+    setText('m-total',       pl.length);
+    setText('m-consulta',    pl.filter(i => i.tipo === 'consulta').length);
+    setText('m-profundizar', pl.filter(i => i.tipo === 'profundizar').length);
+    setText('m-dependencia', pl.filter(i => i.tipo === 'dependencia').length);
+    setText('pl-count-pill',    pl.length + ' ítem' + (pl.length !== 1 ? 's' : ''));
+    setText('retro-count-pill', retro.length + ' respuesta' + (retro.length !== 1 ? 's' : ''));
+  }
+
+  function renderParking(items) {
+    const grid = document.getElementById('celulas-grid');
+    if (!items.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray-text)">Sin ítems registrados</div>';
+      return;
+    }
+    const grouped = {};
+    items.forEach(item => {
+      if (!grouped[item.celula]) grouped[item.celula] = [];
+      grouped[item.celula].push(item);
+    });
+    grid.innerHTML = Object.entries(grouped).map(([celula, list]) => `
+      <div class="celula-card">
+        <div class="celula-head">
+          <span class="celula-name">${esc(celula)}</span>
+          <span class="celula-count">${list.length} ítem${list.length !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="celula-items">
+          ${list.map(item => `
+            <div class="pl-item">
+              <span class="badge ${TYPE_BADGE[item.tipo] || ''}">${esc(TYPE_LABEL[item.tipo] || item.tipo)}</span>
+              <p>${esc(item.descripcion)}</p>
+            </div>`).join('')}
+        </div>
+      </div>`).join('');
+  }
+
+  function renderRetro(items) {
+    if (!items.length) {
+      setText('avg-number', '—');
+      document.getElementById('rating-bars').innerHTML = '<p style="font-size:12px;color:var(--gray-text)">Sin respuestas</p>';
+      document.getElementById('util-comments').innerHTML = '';
+      document.getElementById('mejora-comments').innerHTML = '<div class="comments-label blue"><i class="ti ti-tool" style="font-size:14px"></i> ¿Qué mejorarías?</div>';
+      return;
+    }
+
+    const ratings = items.map(i => Number(i.rating));
+    const avg = (ratings.reduce((s, r) => s + r, 0) / ratings.length).toFixed(1);
+    setText('avg-number', avg);
+
+    const dist = [0,0,0,0,0];
+    ratings.forEach(r => { if (r >= 1 && r <= 5) dist[r-1]++; });
+    const maxCount = Math.max(...dist, 1);
+
+    document.getElementById('rating-bars').innerHTML =
+      [5,4,3,2,1].map(r => {
+        const count = dist[r-1];
+        const pct = (count / maxCount * 100).toFixed(0);
+        return `<div class="rating-row">
+          <span class="rating-stars">${'★'.repeat(r)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+          <span class="bar-count">${count}</span>
+        </div>`;
+      }).join('');
+
+    const utils   = items.filter(i => i.utilidad);
+    const mejoras = items.filter(i => i.mejora);
+
+    document.getElementById('util-comments').innerHTML =
+      utils.length
+        ? utils.map(i => `<div class="comment-item"><div class="dot green"></div><p>${esc(i.utilidad)}</p></div>`).join('')
+        : '<p style="font-size:12px;color:var(--gray-text)">Sin respuestas</p>';
+
+    document.getElementById('mejora-comments').innerHTML =
+      '<div class="comments-label blue"><i class="ti ti-tool" style="font-size:14px"></i> ¿Qué mejorarías?</div>' +
+      (mejoras.length
+        ? mejoras.map(i => `<div class="comment-item"><div class="dot blue"></div><p>${esc(i.mejora)}</p></div>`).join('')
+        : '<p style="font-size:12px;color:var(--gray-text)">Sin respuestas</p>');
+  }
+
+  function show(id) { document.getElementById(id).style.display = ''; }
+  function hide(id) { document.getElementById(id).style.display = 'none'; }
+  function setText(id, val) { document.getElementById(id).textContent = val; }
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  loadData();
+</script>
+</body>
+</html>
