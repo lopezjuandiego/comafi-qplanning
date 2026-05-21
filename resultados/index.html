@@ -121,7 +121,11 @@
     box-shadow: var(--shadow-sm);
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.15s, border-color 0.15s, background 0.15s;
+    user-select: none;
   }
+  .metric-card:hover { box-shadow: var(--shadow-md); }
   .metric-card::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 3px;
@@ -129,6 +133,9 @@
   .metric-card.mc-green::before { background: var(--green); }
   .metric-card.mc-blue::before  { background: var(--blue); }
   .metric-card.mc-orange::before { background: var(--orange); }
+  .metric-card.mc-green.active  { background: var(--green-light); border-color: var(--green); }
+  .metric-card.mc-blue.active   { background: var(--blue-light);  border-color: var(--blue); }
+  .metric-card.mc-orange.active { background: var(--orange-light); border-color: var(--orange); }
   .metric-num {
     font-size: 34px; font-weight: 900; line-height: 1;
     margin-bottom: 5px; letter-spacing: -0.02em;
@@ -331,19 +338,19 @@
     </div>
 
     <div class="metrics-bar">
-      <div class="metric-card mc-green">
+      <div class="metric-card mc-green active" id="chip-total" onclick="setFilter(null)">
         <div class="metric-num" id="m-total">—</div>
         <div class="metric-lbl">Parking Lot</div>
       </div>
-      <div class="metric-card mc-blue">
+      <div class="metric-card mc-blue" id="chip-consulta" onclick="setFilter('consulta')">
         <div class="metric-num" id="m-consulta">—</div>
         <div class="metric-lbl">Consultas</div>
       </div>
-      <div class="metric-card mc-green">
+      <div class="metric-card mc-green" id="chip-profundizar" onclick="setFilter('profundizar')">
         <div class="metric-num" id="m-profundizar">—</div>
         <div class="metric-lbl">A profundizar</div>
       </div>
-      <div class="metric-card mc-orange">
+      <div class="metric-card mc-orange" id="chip-dependencia" onclick="setFilter('dependencia')">
         <div class="metric-num" id="m-dependencia">—</div>
         <div class="metric-lbl">Dependencias</div>
       </div>
@@ -396,6 +403,21 @@
   const TYPE_LABEL = { consulta: 'Consulta', profundizar: 'A profundizar', dependencia: 'Dependencia' };
   const TYPE_BADGE = { consulta: 'badge-blue', profundizar: 'badge-green', dependencia: 'badge-orange' };
 
+  let activeFilter = null;
+  let cachedPL = [];
+
+  function setFilter(tipo) {
+    activeFilter = (activeFilter === tipo) ? null : tipo;
+    updateChips();
+    renderParking(cachedPL);
+  }
+
+  function updateChips() {
+    document.querySelectorAll('.metric-card').forEach(c => c.classList.remove('active'));
+    const chipId = activeFilter ? 'chip-' + activeFilter : 'chip-total';
+    document.getElementById(chipId).classList.add('active');
+  }
+
   async function loadData() {
     const btn  = document.getElementById('refresh-btn');
     const icon = document.getElementById('refresh-icon');
@@ -424,9 +446,12 @@
   }
 
   function renderAll(pl, retro) {
+    cachedPL = pl;
+    activeFilter = null;
     renderMetrics(pl, retro);
     renderParking(pl);
     renderRetro(retro);
+    updateChips();
   }
 
   function renderMetrics(pl, retro) {
@@ -439,13 +464,16 @@
   }
 
   function renderParking(items) {
+    const filtered = activeFilter ? items.filter(i => i.tipo === activeFilter) : items;
+    setText('pl-count-pill', filtered.length + ' ítem' + (filtered.length !== 1 ? 's' : ''));
     const grid = document.getElementById('celulas-grid');
-    if (!items.length) {
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray-text)">Sin ítems registrados</div>';
+    if (!filtered.length) {
+      const msg = activeFilter ? 'Sin ítems de tipo "' + TYPE_LABEL[activeFilter] + '"' : 'Sin ítems registrados';
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray-text)">' + msg + '</div>';
       return;
     }
     const grouped = {};
-    items.forEach(item => {
+    filtered.forEach(item => {
       if (!grouped[item.celula]) grouped[item.celula] = [];
       grouped[item.celula].push(item);
     });
