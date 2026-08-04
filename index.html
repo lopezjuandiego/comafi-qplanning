@@ -168,7 +168,7 @@
     color: var(--dark2); margin-bottom: 7px;
     text-transform: uppercase; letter-spacing: 0.07em;
   }
-  .form-group select, .form-group textarea {
+  .form-group select, .form-group textarea, .form-group input {
     width: 100%; padding: 11px 14px;
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 13.5px; font-weight: 500; color: var(--dark);
@@ -184,7 +184,7 @@
     background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
     cursor: pointer;
   }
-  .form-group select:focus, .form-group textarea:focus {
+  .form-group select:focus, .form-group textarea:focus, .form-group input:focus {
     border-color: var(--green);
     box-shadow: 0 0 0 3.5px rgba(66,169,5,0.13);
   }
@@ -411,6 +411,10 @@
     <div class="form-card">
       <h3>Nuevo item</h3>
       <div class="form-group">
+        <label>Nombre y Apellido</label>
+        <input type="text" id="parking-nombre" placeholder="Escribí tu nombre y apellido" autocomplete="name">
+      </div>
+      <div class="form-group">
         <label>Célula</label>
         <select id="celula-select">
           <option value="">— Seleccioná una célula —</option>
@@ -496,6 +500,10 @@
     <div class="form-card">
       <h3>Tu feedback</h3>
       <div class="form-group">
+        <label>Nombre y Apellido</label>
+        <input type="text" id="retro-nombre" placeholder="Escribí tu nombre y apellido" autocomplete="name">
+      </div>
+      <div class="form-group">
         <label>¿Cómo evaluás el encuentro de hoy?</label>
         <div class="star-row" id="star-row">
           <button class="star-btn" onclick="setRating(1)" title="1">★</button>
@@ -567,12 +575,14 @@
     document.getElementById('cnt-dep').textContent=parkingItems.filter(i=>i.type==='dependencia').length;
   }
   function submitParking() {
+    const nombre=document.getElementById('parking-nombre').value.trim();
     const celula=document.getElementById('celula-select').value;
     const desc=document.getElementById('parking-desc').value.trim();
+    if(!nombre){showToast('Escribí tu nombre y apellido');return;}
     if(!celula){showToast('Seleccioná una célula');return;}
     if(!selectedType){showToast('Elegí el tipo de item');return;}
     if(!desc){showToast('Escribí una descripción');return;}
-    parkingItems.unshift({celula,type:selectedType,desc,time:new Date()});
+    parkingItems.unshift({nombre,celula,type:selectedType,desc,time:new Date()});
     renderParking(); updateStats();
     if (APPS_SCRIPT_URL !== 'PEGAR_URL_AQUI') {
       fetch(APPS_SCRIPT_URL, {
@@ -584,10 +594,12 @@
           timestamp: new Date().toISOString(),
           celula,
           tipo: selectedType,
-          descripcion: desc
+          descripcion: desc,
+          nombre
         })
       }).catch(err => console.warn('No se pudo guardar en sheet:', err));
     }
+    document.getElementById('parking-nombre').value='';
     document.getElementById('celula-select').value='';
     document.getElementById('parking-desc').value='';
     document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
@@ -606,7 +618,7 @@
         +'<div class="parking-item-top">'
         +'<span class="badge badge-green">'+item.celula+'</span>'
         +'<span class="badge '+bc[item.type]+'">'+labels[item.type]+'</span>'
-        +'</div><p>'+item.desc+'</p><div class="ts">'+hm+'</div></div>';
+        +'</div><p>'+item.desc+'</p><div class="ts">'+(item.nombre?item.nombre+' · ':'')+hm+'</div></div>';
     }).join('');
   }
   function setRating(n) {
@@ -614,11 +626,13 @@
     document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('active',i<n));
   }
   function submitRetro() {
+    const nombre=document.getElementById('retro-nombre').value.trim();
     const util=document.getElementById('retro-util').value.trim();
     const mejora=document.getElementById('retro-mejora').value.trim();
+    if(!nombre){showToast('Escribí tu nombre y apellido');return;}
     if(!currentRating){showToast('Puntuá el encuentro');return;}
     if(!util&&!mejora){showToast('Completá al menos un campo');return;}
-    retroItems.unshift({rating:currentRating,util,mejora});
+    retroItems.unshift({nombre,rating:currentRating,util,mejora});
     renderRetro();
     if (APPS_SCRIPT_URL !== 'PEGAR_URL_AQUI') {
       fetch(APPS_SCRIPT_URL, {
@@ -630,10 +644,12 @@
           timestamp: new Date().toISOString(),
           rating: currentRating,
           utilidad: util,
-          mejora
+          mejora,
+          nombre
         })
       }).catch(err => console.warn('No se pudo guardar en sheet:', err));
     }
+    document.getElementById('retro-nombre').value='';
     document.getElementById('retro-util').value='';
     document.getElementById('retro-mejora').value='';
     setRating(0);
