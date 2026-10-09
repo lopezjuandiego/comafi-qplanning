@@ -80,7 +80,7 @@
     font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.15;
     border-bottom: 3px solid var(--brand-dark); padding-bottom: 6px; margin-bottom: 10px;
   }
-  .section-intro p { font-size: 14px; color: #444; max-width: 600px; }
+  .section-intro p { font-size: 14px; color: #444; }
 
   /* ── STAT CARDS ─────────────────────────── */
   .stats-row {
@@ -121,6 +121,8 @@
   .form-group select:focus, .form-group textarea:focus, .form-group input:focus {
     border-color: var(--brand); box-shadow: 0 0 0 3px rgba(1,134,108,0.15);
   }
+  .req { color: #c0392b; font-weight: 700; }
+  .form-group input.invalid { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
   .form-group textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
 
   /* ── TYPE CARDS ─────────────────────────── */
@@ -285,8 +287,8 @@
     <div class="form-card">
       <h3>Nuevo item</h3>
       <div class="form-group">
-        <label>Nombre y Apellido</label>
-        <input type="text" id="parking-nombre" placeholder="Escribí tu nombre y apellido" autocomplete="name">
+        <label>Nombre y Apellido <span class="req" title="Obligatorio">*</span></label>
+        <input type="text" id="parking-nombre" required aria-required="true" placeholder="Escribí tu nombre y apellido" autocomplete="name">
       </div>
       <div class="form-group">
         <label>Célula</label>
@@ -348,8 +350,8 @@
     <div class="form-card">
       <h3>Tu feedback</h3>
       <div class="form-group">
-        <label>Nombre y Apellido</label>
-        <input type="text" id="retro-nombre" placeholder="Escribí tu nombre y apellido" autocomplete="name">
+        <label>Nombre y Apellido <span class="req" title="Obligatorio">*</span></label>
+        <input type="text" id="retro-nombre" required aria-required="true" placeholder="Escribí tu nombre y apellido" autocomplete="name">
       </div>
       <div class="form-group">
         <label>¿Cómo evaluás el encuentro de hoy?</label>
@@ -416,6 +418,14 @@
     t.textContent=msg; t.classList.add('show');
     setTimeout(()=>t.classList.remove('show'),2400);
   }
+  function nombreValido(id,nombre) {
+    const el=document.getElementById(id);
+    const ok=nombre.split(/\s+/).filter(Boolean).length>=2;
+    el.classList.toggle('invalid',!ok);
+    if(!ok){showToast(nombre?'Completá nombre y apellido':'El nombre y apellido es obligatorio');el.focus();}
+    return ok;
+  }
+  ['parking-nombre','retro-nombre'].forEach(id=>document.getElementById(id).addEventListener('input',e=>e.target.classList.remove('invalid')));
   function updateStats() {
     document.getElementById('cnt-total').textContent=parkingItems.length;
     document.getElementById('cnt-consul').textContent=parkingItems.filter(i=>i.type==='consulta').length;
@@ -426,7 +436,7 @@
     const nombre=document.getElementById('parking-nombre').value.trim();
     const celula=document.getElementById('celula-select').value;
     const desc=document.getElementById('parking-desc').value.trim();
-    if(!nombre){showToast('Escribí tu nombre y apellido');return;}
+    if(!nombreValido('parking-nombre',nombre))return;
     if(!celula){showToast('Seleccioná una célula');return;}
     if(!selectedType){showToast('Elegí el tipo de item');return;}
     if(!desc){showToast('Escribí una descripción');return;}
@@ -477,7 +487,7 @@
     const nombre=document.getElementById('retro-nombre').value.trim();
     const util=document.getElementById('retro-util').value.trim();
     const mejora=document.getElementById('retro-mejora').value.trim();
-    if(!nombre){showToast('Escribí tu nombre y apellido');return;}
+    if(!nombreValido('retro-nombre',nombre))return;
     if(!currentRating){showToast('Puntuá el encuentro');return;}
     if(!util&&!mejora){showToast('Completá al menos un campo');return;}
     retroItems.unshift({nombre,rating:currentRating,util,mejora});
