@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resultados Q Planning Q4 — Banco Comafi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Paleta del Brief Ejecutivo / dashboards Q4 Comafi */
+  :root {
+    --brand: #01866C;
+    --brand-dark: #005458;
+    --tint: #E4EEEC;
+    --tint-2: #F2F7F5;
+    --line: #D0D0D0;
+    --muted: #7F7F7F;
+    --text: #000000;
+    --amber: #C9772E;
+    --amber-light: #FDE9D9;
+    --amber-dark: #9a4b14;
+    --white: #ffffff;
+    /* alias usados por el JS */
+    --green: var(--brand);
+    --gray-text: var(--muted);
+    --border: var(--line);
+  }
+  body {
+    font-family: 'Archivo', 'Segoe UI', Calibri, Arial, sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  header { background: var(--white); padding: 18px 2rem 6px; position: relative; max-width: 1020px; margin: 0 auto; }
+  .hdr-text { padding-right: 150px; }
+  header h1 {
+    font-size: 1.6rem; font-weight: 800; color: var(--brand);
+    text-transform: uppercase; letter-spacing: .01em; line-height: 1.1;
+  }
+  header h1::after { content: ''; display: block; width: 110px; height: 4px; background: var(--brand-dark); margin: 8px 0 6px; }
+  header p { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .02em; }
+  .hdr-logo { position: absolute; top: 20px; right: 2rem; }
+  .hdr-logo img { height: 34px; width: auto; display: block; }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    position: sticky; top: 0; z-index: 100; background: var(--white);
+    border-bottom: 1px solid var(--line);
+  }
+  .toolbar-inner {
+    max-width: 1020px; margin: 0 auto; padding: 8px 2rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .live-tag {
+    display: inline-flex; align-items: center; gap: 6px; margin-right: auto;
+    font-size: 12px; font-weight: 600; color: var(--brand-dark);
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .live-tag::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); }
+  .refresh-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--white); border: 1px solid var(--line); color: var(--brand-dark);
+    font-family: inherit; font-size: 12px; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    padding: 7px 14px; border-radius: 6px; cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .refresh-btn:hover { background: var(--tint); border-color: var(--brand); }
+  .refresh-btn i { font-size: 15px; }
+  .refresh-btn.spinning i, .refresh-btn i.spinning { animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── LAYOUT ── */
+  main { max-width: 1020px; margin: 0 auto; padding: 2rem 2rem 3rem; }
+
+  /* ── SECTION INTRO ── */
+  .section-intro { margin-bottom: 1.5rem; }
+  .section-tag {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .04em; color: var(--brand-dark);
+    background: var(--tint); padding: 4px 10px; margin-bottom: 12px;
+  }
+  .section-intro h2 {
+    font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.15;
+    border-bottom: 3px solid var(--brand-dark); padding-bottom: 6px; margin-bottom: 10px;
+  }
+  .section-intro p { font-size: 14px; color: #444; }
+
+  /* ── METRICS BAR ── */
+  .metrics-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin-bottom: 2.5rem; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px;
+  }
+  .metric-card {
+    background: var(--tint); border: 2px solid transparent; border-radius: 4px;
+    padding: 8px 14px; display: flex; flex-direction: column-reverse;
+    position: relative; cursor: pointer; user-select: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .metric-card:hover { background: #D8E7E3; }
+  .metric-card::before {
+    content: ''; position: absolute; top: 10px; right: 12px;
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .metric-card.mc-green::before  { background: var(--brand); }
+  .metric-card.mc-blue::before   { background: var(--brand-dark); }
+  .metric-card.mc-orange::before { background: var(--amber); }
+  .metric-card.active { border-color: var(--brand-dark); background: var(--white); }
+  .metric-num { font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin-top: 2px; color: var(--text); }
+  .metric-lbl { font-size: .72rem; color: var(--brand-dark); text-transform: uppercase; letter-spacing: .04em; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 1.1rem; padding-bottom: 5px;
+    border-bottom: 3px solid var(--brand-dark);
+  }
+  .section-header h3 { font-size: 17px; font-weight: 700; color: var(--text); }
+  .section-header i { font-size: 18px; color: var(--brand-dark); }
+  .section-header .count-pill {
+    margin-left: auto; background: var(--tint); color: var(--brand-dark);
+    font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 10px;
+  }
+
+  /* ── PARKING LOT ── */
+  .parking-section { margin-bottom: 3rem; }
+  .celulas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+  .celula-card { background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .celula-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 9px 14px; background: var(--tint); border-bottom: 1px solid var(--line);
+  }
+  .celula-name { font-size: .78rem; font-weight: 700; color: var(--brand-dark); text-transform: uppercase; letter-spacing: .04em; }
+  .celula-count { font-size: 11px; font-weight: 600; color: var(--muted); background: var(--white); padding: 1px 8px; border-radius: 8px; white-space: nowrap; }
+  .celula-items { padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+  .pl-item { display: flex; flex-direction: column; gap: 4px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+  .pl-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .pl-item p { font-size: 13.5px; color: var(--text); line-height: 1.5; }
+  .pl-author { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; color: var(--muted); font-style: italic; }
+  .pl-author i { font-size: 13px; }
+  .comment-author { display: block; font-size: 11.5px; color: var(--muted); font-style: italic; margin-top: 4px; }
+
+  /* ── BADGES ── */
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 9px; border-radius: 10px; align-self: flex-start; }
+  .badge-blue   { background: var(--tint); color: var(--brand-dark); }
+  .badge-green  { background: #D5EEE7; color: var(--brand); }
+  .badge-orange { background: var(--amber-light); color: var(--amber-dark); }
+
+  /* ── RETRO SECTION ── */
+  .retro-section { margin-bottom: 3rem; }
+  .retro-cols { display: grid; grid-template-columns: 1fr 2fr; gap: 14px; }
+  .retro-col { background: var(--white); border: 1.5px solid var(--line); border-radius: 12px; padding: 1.25rem; }
+  .retro-col-title {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 7px;
+  }
+  .retro-col-title i { font-size: 16px; }
+  .retro-col-title.green { color: var(--brand); }
+  .retro-col-title.blue  { color: var(--brand-dark); }
+  .avg-display { text-align: center; margin-bottom: 1.25rem; }
+  .avg-number { font-size: 48px; font-weight: 800; color: var(--brand); line-height: 1; }
+  .avg-denom { font-size: 16px; color: var(--muted); font-weight: 600; }
+  .avg-label { font-size: 11px; color: var(--brand-dark); text-transform: uppercase; letter-spacing: .04em; margin-top: 4px; }
+  .rating-bars { display: flex; flex-direction: column; gap: 7px; }
+  .rating-row { display: grid; grid-template-columns: 52px 1fr 24px; align-items: center; gap: 8px; }
+  .rating-stars { font-size: 11px; color: var(--brand); letter-spacing: 1px; }
+  .bar-track { height: 10px; border-radius: 4px; background: #eee; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; background: var(--brand); transition: width 0.6s ease; }
+  .bar-count { font-size: 12px; font-weight: 600; color: var(--muted); text-align: right; }
+  .comments-group { display: flex; flex-direction: column; gap: 8px; }
+  .comments-label {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+  }
+  .comments-label.green { color: var(--brand); }
+  .comments-label.blue  { color: var(--brand-dark); }
+  .comment-item {
+    display: flex; align-items: flex-start; gap: 10px; background: var(--tint-2);
+    border: 1px solid var(--line); border-radius: 4px; padding: 9px 12px;
+    font-size: 13.5px; color: var(--text); line-height: 1.5;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .dot.green { background: var(--brand); }
+  .dot.blue  { background: var(--brand-dark); }
+
+  /* ── ESTADOS ── */
+  .state-center {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 5rem 1rem; text-align: center; gap: 12px;
+  }
+  .state-center i { font-size: 40px; color: #9DC9BE; }
+  .state-center p { font-size: 14px; color: var(--muted); }
+  .state-center.error i { color: #c0392b; }
+  .state-center.error p { color: #a03030; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    header { padding: 14px 16px 4px; }
+    .hdr-text { padding-right: 0; }
+    .hdr-logo { position: static; margin-bottom: 10px; }
+    .hdr-logo img { height: 28px; }
+    header h1 { font-size: 1.3rem; }
+    .toolbar-inner { padding: 8px 16px; }
+    .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+    .retro-cols { grid-template-columns: 1fr; }
+    .celulas-grid { grid-template-columns: 1fr; }
+    main { padding: 1.25rem 16px 2.5rem; }
+    .section-intro h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-logo"><img src="/logo_comafi.png" alt="Comafi"></div>
+  <div class="hdr-text">
+    <h1>Resultados Q Planning Q4</h1>
+    <p>Dominio Canales · Banco Comafi · 2026</p>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="toolbar-inner">
+    <span class="live-tag">Datos en vivo</span>
+    <button class="refresh-btn" id="refresh-btn" onclick="loadData()">
+      <i class="ti ti-refresh" id="refresh-icon"></i> Actualizar
+    </button>
+  </div>
+</div>
+
+<main>
+  <div id="state-loading" class="state-center">
+    <i class="ti ti-loader-2" style="animation:spin 1s linear infinite;font-size:40px;color:var(--green)"></i>
+    <p>Cargando datos...</p>
+  </div>
+  <div id="state-error" class="state-center error" style="display:none">
+    <i class="ti ti-alert-circle"></i>
+    <p id="error-msg">No se pudo cargar la información.</p>
+  </div>
+
+  <div id="content" style="display:none">
+
+    <div class="section-intro">
+      <div class="section-tag">Q Planning Q4 · 2026</div>
+      <h2>Resultados del encuentro</h2>
+      <p>Datos en vivo del Parking Lot.</p>
+    </div>
+
+    <div class="metrics-bar">
+      <div class="metric-card mc-green active" id="chip-total" onclick="setFilter(null)">
+        <div class="metric-num" id="m-total">—</div>
+        <div class="metric-lbl">Parking Lot</div>
+      </div>
+      <div class="metric-card mc-blue" id="chip-consulta" onclick="setFilter('consulta')">
+        <div class="metric-num" id="m-consulta">—</div>
+        <div class="metric-lbl">Consultas</div>
+      </div>
+      <div class="metric-card mc-green" id="chip-profundizar" onclick="setFilter('profundizar')">
+        <div class="metric-num" id="m-profundizar">—</div>
+        <div class="metric-lbl">A profundizar</div>
+      </div>
+      <div class="metric-card mc-orange" id="chip-dependencia" onclick="setFilter('dependencia')">
+        <div class="metric-num" id="m-dependencia">—</div>
+        <div class="metric-lbl">Dependencias</div>
+      </div>
+    </div>
+
+    <section class="parking-section">
+      <div class="section-header">
+        <i class="ti ti-parking"></i>
+        <h3>Parking Lot</h3>
+        <span class="count-pill" id="pl-count-pill">0 ítems</span>
+      </div>
+      <div class="celulas-grid" id="celulas-grid"></div>
+    </section>
+
+    <section class="retro-section" style="display:none">
+      <div class="section-header">
+        <i class="ti ti-mood-check"></i>
+        <h3>Retro de cierre</h3>
+        <span class="count-pill" id="retro-count-pill">0 respuestas</span>
+      </div>
+      <div class="retro-cols">
+        <div class="retro-col">
+          <div class="retro-col-title green">
+            <i class="ti ti-star-filled"></i> Rating
+          </div>
+          <div class="avg-display">
+            <div><span class="avg-number" id="avg-number">—</span><span class="avg-denom"> / 5</span></div>
+            <div class="avg-label">Promedio</div>
+          </div>
+          <div class="rating-bars" id="rating-bars"></div>
+        </div>
+        <div class="retro-col">
+          <div class="retro-col-title green">
+            <i class="ti ti-thumb-up"></i> ¿Qué fue útil?
+          </div>
+          <div class="comments-group" id="util-comments"></div>
+          <div class="comments-group" id="mejora-comments" style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)">
+            <div class="comments-label blue"><i class="ti ti-tool" style="font-size:14px"></i> ¿Qué mejorarías?</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6sb4aAeGTE_2NjFbeu9uLT1ZXHPIEmFvItKVfmIl6Iou7sdUaaqUk3j0_fxLbD1XOYA/exec';
+
+  // El Sheet acumula ediciones anteriores: solo se muestran registros desde el inicio de Q4
+  const DESDE = new Date('2026-10-01T00:00:00-03:00');
+  const enEdicion = i => !i.timestamp || new Date(i.timestamp) >= DESDE;
+  // Archivo Canales Q4: el Sheet también tiene la edición de Productos, se filtra por célula / dominio
+  const CELULAS_CANALES = ['Atención Digital (Hablemos)','Online Banking','CEM','Onboardings','e-BE','Asistentes Virtuales (Sofia/LISA)','Banca Telefónica (Call Center)'];
+  const esCanalesPL = i => enEdicion(i) && CELULAS_CANALES.includes(i.celula);
+  const esCanalesRetro = i => enEdicion(i) && !i.dominio && (!i.timestamp || new Date(i.timestamp) < new Date('2026-10-15T00:00:00-03:00'));
+
+  const TYPE_LABEL = { consulta: 'Consulta', profundizar: 'A profundizar', dependencia: 'Dependencia' };
+  const TYPE_BADGE = { consulta: 'badge-blue', profundizar: 'badge-green', dependencia: 'badge-orange' };
+
+  let activeFilter = null;
+  let cachedPL = [];
+
+  function setFilter(tipo) {
+    activeFilter = (activeFilter === tipo) ? null : tipo;
+    updateChips();
+    renderParking(cachedPL);
+  }
+
+  function updateChips() {
+    document.querySelectorAll('.metric-card').forEach(c => c.classList.remove('active'));
+    const chipId = activeFilter ? 'chip-' + activeFilter : 'chip-total';
+    document.getElementById(chipId).classList.add('active');
+  }
+
+  async function loadData() {
+    const btn  = document.getElementById('refresh-btn');
+    const icon = document.getElementById('refresh-icon');
+    btn.disabled = true;
+    icon.classList.add('spinning');
+    show('state-loading');
+    hide('state-error');
+    hide('content');
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      renderAll((data.parkingLot || []).filter(esCanalesPL), (data.retro || []).filter(esCanalesRetro));
+      hide('state-loading');
+      show('content');
+    } catch (err) {
+      hide('state-loading');
+      document.getElementById('error-msg').textContent =
+        'No se pudo cargar la información. (' + err.message + ')';
+      show('state-error');
+    } finally {
+      btn.disabled = false;
+      icon.classList.remove('spinning');
+    }
+  }
+
+  function renderAll(pl, retro) {
+    cachedPL = pl;
+    activeFilter = null;
+    renderMetrics(pl, retro);
+    renderParking(pl);
+    renderRetro(retro);
+    updateChips();
+  }
+
+  function renderMetrics(pl, retro) {
+    setText('m-total',       pl.length);
+    setText('m-consulta',    pl.filter(i => i.tipo === 'consulta').length);
+    setText('m-profundizar', pl.filter(i => i.tipo === 'profundizar').length);
+    setText('m-dependencia', pl.filter(i => i.tipo === 'dependencia').length);
+    setText('pl-count-pill',    pl.length + ' ítem' + (pl.length !== 1 ? 's' : ''));
+    setText('retro-count-pill', retro.length + ' respuesta' + (retro.length !== 1 ? 's' : ''));
+  }
+
+  function renderParking(items) {
+    const filtered = activeFilter ? items.filter(i => i.tipo === activeFilter) : items;
+    setText('pl-count-pill', filtered.length + ' ítem' + (filtered.length !== 1 ? 's' : ''));
+    const grid = document.getElementById('celulas-grid');
+    if (!filtered.length) {
+      const msg = activeFilter ? 'Sin ítems de tipo "' + TYPE_LABEL[activeFilter] + '"' : 'Sin ítems registrados';
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--gray-text)">' + msg + '</div>';
+      return;
+    }
+    const grouped = {};
+    filtered.forEach(item => {
+      if (!grouped[item.celula]) grouped[item.celula] = [];
+      grouped[item.celula].push(item);
+    });
+    grid.innerHTML = Object.entries(grouped).map(([celula, list]) => `
+      <div class="celula-card">
+        <div class="celula-head">
+          <span class="celula-name">${esc(celula)}</span>
+          <span class="celula-count">${list.length} ítem${list.length !== 1 ? 's' : ''}</span>
+        </div>
+        <div class="celula-items">
+          ${list.map(item => `
+            <div class="pl-item">
+              <span class="badge ${TYPE_BADGE[item.tipo] || ''}">${esc(TYPE_LABEL[item.tipo] || item.tipo)}</span>
+              <p>${esc(item.descripcion)}</p>
+              ${item.nombre ? `<span class="pl-author"><i class="ti ti-user"></i>${esc(item.nombre)}</span>` : ''}
+            </div>`).join('')}
+        </div>
+      </div>`).join('');
+  }
+
+  function renderRetro(items) {
+    if (!items.length) {
+      setText('avg-number', '—');
+      document.getElementById('rating-bars').innerHTML = '<p style="font-size:12px;color:var(--gray-text)">Sin respuestas</p>';
+      document.getElementById('util-comments').innerHTML = '';
+      document.getElementById('mejora-comments').innerHTML = '<div class="comments-label blue"><i class="ti ti-tool" style="font-size:14px"></i> ¿Qué mejorarías?</div>';
+      return;
+    }
+
+    const ratings = items.map(i => Number(i.rating));
+    const avg = (ratings.reduce((s, r) => s + r, 0) / ratings.length).toFixed(1);
+    setText('avg-number', avg);
+
+    const dist = [0,0,0,0,0];
+    ratings.forEach(r => { if (r >= 1 && r <= 5) dist[r-1]++; });
+    const maxCount = Math.max(...dist, 1);
+
+    document.getElementById('rating-bars').innerHTML =
+      [5,4,3,2,1].map(r => {
+        const count = dist[r-1];
+        const pct = (count / maxCount * 100).toFixed(0);
+        return `<div class="rating-row">
+          <span class="rating-stars">${'★'.repeat(r)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+          <span class="bar-count">${count}</span>
+        </div>`;
+      }).join('');
+
+    const utils   = items.filter(i => i.utilidad);
+    const mejoras = items.filter(i => i.mejora);
+
+    document.getElementById('util-comments').innerHTML =
+      utils.length
+        ? utils.map(i => `<div class="comment-item"><div class="dot green"></div><div><p>${esc(i.utilidad)}</p>${i.nombre ? `<span class="comment-author">${esc(i.nombre)}</span>` : ''}</div></div>`).join('')
+        : '<p style="font-size:12px;color:var(--gray-text)">Sin respuestas</p>';
+
+    document.getElementById('mejora-comments').innerHTML =
+      '<div class="comments-label blue"><i class="ti ti-tool" style="font-size:14px"></i> ¿Qué mejorarías?</div>' +
+      (mejoras.length
+        ? mejoras.map(i => `<div class="comment-item"><div class="dot blue"></div><div><p>${esc(i.mejora)}</p>${i.nombre ? `<span class="comment-author">${esc(i.nombre)}</span>` : ''}</div></div>`).join('')
+        : '<p style="font-size:12px;color:var(--gray-text)">Sin respuestas</p>');
+  }
+
+  function show(id) { document.getElementById(id).style.display = ''; }
+  function hide(id) { document.getElementById(id).style.display = 'none'; }
+  function setText(id, val) { document.getElementById(id).textContent = val; }
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  loadData();
+</script>
+</body>
+</html>

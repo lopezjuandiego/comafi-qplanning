@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q Planning Q4 — Banco Comafi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Paleta del Brief Ejecutivo / dashboards Q4 Comafi */
+  :root {
+    --brand: #01866C;
+    --brand-dark: #005458;
+    --tint: #E4EEEC;
+    --tint-2: #F2F7F5;
+    --line: #D0D0D0;
+    --muted: #7F7F7F;
+    --text: #000000;
+    --amber: #C9772E;
+    --amber-light: #FDE9D9;
+    --amber-dark: #9a4b14;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'Archivo', 'Segoe UI', Calibri, Arial, sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ─────────────────────────────── */
+  header { background: var(--white); padding: 18px 1.5rem 6px; position: relative; max-width: 860px; margin: 0 auto; }
+  .hdr-text { padding-right: 150px; }
+  header h1 {
+    font-size: 1.6rem; font-weight: 800; color: var(--brand);
+    text-transform: uppercase; letter-spacing: .01em; line-height: 1.1;
+  }
+  header h1::after { content: ''; display: block; width: 110px; height: 4px; background: var(--brand-dark); margin: 8px 0 6px; }
+  header p { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .02em; }
+  .hdr-logo { position: absolute; top: 20px; right: 1.5rem; }
+  .hdr-logo img { height: 34px; width: auto; display: block; }
+
+  /* ── TABS ───────────────────────────────── */
+  .tab-bar {
+    position: sticky; top: 0; z-index: 100; background: var(--white);
+    border-bottom: 1px solid var(--line);
+    display: flex; justify-content: center; gap: 4px;
+  }
+  .tab-btn {
+    display: flex; align-items: center; gap: 7px; padding: 13px 18px;
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    color: var(--brand-dark); background: none; border: none;
+    border-bottom: 3px solid transparent; cursor: pointer;
+  }
+  .tab-btn:hover { background: var(--tint-2); color: var(--brand); }
+  .tab-btn.active { border-bottom-color: var(--brand-dark); }
+  .tab-btn i { font-size: 17px; }
+
+  /* ── LAYOUT ─────────────────────────────── */
+  main { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+  .panel { display: none; animation: fadein 0.18s ease; }
+  .panel.active { display: block; }
+  @keyframes fadein { from { opacity: .35; } to { opacity: 1; } }
+
+  /* ── SECTION INTRO ──────────────────────── */
+  .section-intro { margin-bottom: 1.5rem; }
+  .section-tag {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: .04em; color: var(--brand-dark);
+    background: var(--tint); padding: 4px 10px; margin-bottom: 12px;
+  }
+  .section-intro h2 {
+    font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.15;
+    border-bottom: 3px solid var(--brand-dark); padding-bottom: 6px; margin-bottom: 10px;
+  }
+  .section-intro p { font-size: 14px; color: #444; }
+
+  /* ── STAT CARDS ─────────────────────────── */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin-bottom: 1.75rem; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px;
+  }
+  .stat-card { background: var(--tint); border-radius: 4px; padding: 8px 14px; display: flex; flex-direction: column-reverse; }
+  .stat-card .num { font-size: 1.6rem; font-weight: 800; line-height: 1.2; margin-top: 2px; color: var(--text); }
+  .stat-card .lbl { font-size: .72rem; color: var(--brand-dark); text-transform: uppercase; letter-spacing: .04em; }
+
+  /* ── FORM CARD ──────────────────────────── */
+  .form-card {
+    background: var(--white); border: 1.5px solid var(--line); border-radius: 12px;
+    padding: 1.5rem; margin-bottom: 2rem;
+  }
+  .form-card h3 {
+    font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--brand-dark); background: var(--tint); padding: 6px 10px; margin-bottom: 1.25rem;
+  }
+
+  /* ── FORM ELEMENTS ──────────────────────── */
+  .form-group { margin-bottom: 1.15rem; }
+  .form-group label {
+    display: block; font-size: 12px; font-weight: 600; color: var(--brand-dark);
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em;
+  }
+  .form-group select, .form-group textarea, .form-group input {
+    width: 100%; padding: 10px 12px; font-family: inherit;
+    font-size: 14px; color: var(--text); background: var(--white);
+    border: 1px solid var(--line); border-radius: 4px; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none; -webkit-appearance: none;
+  }
+  .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23005458' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 34px; cursor: pointer;
+  }
+  .form-group select:focus, .form-group textarea:focus, .form-group input:focus {
+    border-color: var(--brand); box-shadow: 0 0 0 3px rgba(1,134,108,0.15);
+  }
+  .req { color: #c0392b; font-weight: 700; }
+  .form-group input.invalid { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
+  .form-group textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
+
+  /* ── TYPE CARDS ─────────────────────────── */
+  .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .type-card {
+    border: 1px solid var(--line); border-radius: 6px; padding: 14px 12px;
+    cursor: pointer; text-align: center; background: var(--white); user-select: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .type-card:hover { border-color: var(--brand); background: var(--tint-2); }
+  .type-card.selected { border: 2px solid var(--brand); background: var(--tint); padding: 13px 11px; }
+  .type-card i { font-size: 24px; color: var(--muted); display: block; margin-bottom: 6px; }
+  .type-card.selected i { color: var(--brand); }
+  .type-card .type-label { font-size: 13px; font-weight: 700; color: var(--text); }
+  .type-card .type-desc { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .type-card.selected .type-label { color: var(--brand-dark); }
+
+  /* ── SUBMIT BUTTON ──────────────────────── */
+  .submit-btn {
+    width: 100%; padding: 12px 20px; font-size: 13px; font-weight: 700; font-family: inherit;
+    letter-spacing: .04em; text-transform: uppercase;
+    background: var(--brand-dark); color: #fff; border: none; border-radius: 6px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-top: 1.25rem; transition: background 0.15s;
+  }
+  .submit-btn:hover { background: var(--brand); }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn i { font-size: 16px; }
+
+  /* ── RESULTS ────────────────────────────── */
+  .results-section h3 {
+    font-size: 17px; font-weight: 700; color: var(--text);
+    border-bottom: 3px solid var(--brand-dark); padding-bottom: 5px; margin-bottom: 1rem;
+  }
+  .parking-list { display: flex; flex-direction: column; gap: 10px; }
+  .parking-item {
+    background: var(--white); border: 1px solid var(--line); border-left: 5px solid var(--brand);
+    border-radius: 4px; padding: 12px 16px;
+  }
+  .parking-item-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+  .badge { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 10px; }
+  .badge-green { background: var(--tint); color: var(--brand-dark); }
+  .badge-teal { background: var(--tint-2); color: var(--brand-dark); border: 1px solid var(--line); }
+  .badge-blue { background: #D5EEE7; color: var(--brand); }
+  .badge-amber { background: var(--amber-light); color: var(--amber-dark); }
+  .parking-item p { font-size: 14px; color: var(--text); line-height: 1.5; }
+  .parking-item .ts { font-size: 11.5px; color: var(--muted); margin-top: 6px; font-style: italic; }
+
+  /* ── EMPTY STATE ────────────────────────── */
+  .empty-state {
+    text-align: center; padding: 2.5rem 1rem; color: var(--muted); font-size: 13px;
+    border: 1.5px dashed var(--line); border-radius: 12px; background: var(--white);
+  }
+  .empty-state i { font-size: 34px; display: block; margin-bottom: 8px; color: #9DC9BE; }
+
+  /* ── RETRO ──────────────────────────────── */
+  .retro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.25rem; }
+  .retro-col { background: var(--tint-2); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; }
+  .retro-col h4 {
+    font-size: 12px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 7px;
+    text-transform: uppercase; letter-spacing: .04em;
+  }
+  .retro-col h4 i { font-size: 16px; }
+  .retro-col h4.green { color: var(--brand); }
+  .retro-col h4.blue { color: var(--brand-dark); }
+  .retro-col textarea {
+    width: 100%; padding: 10px 12px; font-family: inherit; font-size: 14px; color: var(--text);
+    background: var(--white); border: 1px solid var(--line); border-radius: 4px;
+    outline: none; min-height: 110px; resize: vertical; transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .retro-col textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(1,134,108,0.15); }
+
+  /* ── STARS ──────────────────────────────── */
+  .star-row { display: flex; gap: 6px; }
+  .star-btn {
+    font-size: 34px; background: none; border: none; cursor: pointer; color: #D0D0D0;
+    transition: transform 0.12s, color 0.12s; padding: 2px; line-height: 1;
+  }
+  .star-btn.active { color: var(--brand); }
+  .star-btn:hover { transform: scale(1.15); color: var(--brand); }
+
+  /* ── RATING BAR ─────────────────────────── */
+  .rating-bar {
+    background: var(--tint); border-radius: 4px; padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--brand-dark);
+    margin-bottom: 1rem; font-weight: 600;
+  }
+  .rating-bar i { font-size: 17px; }
+  .retro-answers { display: flex; flex-direction: column; gap: 8px; }
+  .retro-answer-item {
+    display: flex; align-items: flex-start; gap: 12px; background: var(--white);
+    border: 1px solid var(--line); border-radius: 4px; padding: 10px 14px;
+    font-size: 14px; color: var(--text); line-height: 1.5;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .dot.green { background: var(--brand); }
+  .dot.blue { background: var(--brand-dark); }
+
+  /* ── TOAST ──────────────────────────────── */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(90px);
+    background: var(--brand-dark); color: #fff; padding: 12px 22px; border-radius: 6px;
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+    transition: transform 0.28s cubic-bezier(.34,1.56,.64,1);
+    z-index: 9999; pointer-events: none; box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── RESPONSIVE ─────────────────────────── */
+  @media (max-width: 600px) {
+    header { padding: 14px 16px 4px; }
+    .hdr-text { padding-right: 0; }
+    .hdr-logo { position: static; margin-bottom: 10px; }
+    .hdr-logo img { height: 28px; }
+    header h1 { font-size: 1.3rem; }
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .type-grid { grid-template-columns: 1fr; }
+    .retro-grid { grid-template-columns: 1fr; }
+    .tab-btn { flex: 1; justify-content: center; padding: 12px 8px; }
+    main { padding: 1.25rem 16px 2.5rem; }
+    .form-card { padding: 1.1rem; }
+    .section-intro h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-logo"><img src="/logo_comafi.png" alt="Comafi"></div>
+  <div class="hdr-text">
+    <h1>Q Planning Q4</h1>
+    <p>Dominio Canales · Banco Comafi · 2026</p>
+  </div>
+</header>
+
+<nav class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('parking')" id="tab-parking">
+    <i class="ti ti-parking"></i> Parking Lot
+  </button>
+  <button class="tab-btn" onclick="switchTab('retro')" id="tab-retro">
+    <i class="ti ti-mood-check"></i> Retro de cierre
+  </button>
+</nav>
+
+<main>
+
+  <div class="panel active" id="panel-parking">
+    <div class="section-intro">
+      <div class="section-tag">Q Planning Q4 · 2026</div>
+      <h2>Parking Lot</h2>
+      <p>Dejá tu consulta, dependencia o tema a profundizar. Lo abordaremos durante el encuentro o quedará agendado.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="num" id="cnt-total">0</div><div class="lbl">Total</div></div>
+      <div class="stat-card"><div class="num" id="cnt-consul">0</div><div class="lbl">Consultas</div></div>
+      <div class="stat-card"><div class="num" id="cnt-profund">0</div><div class="lbl">A profundizar</div></div>
+      <div class="stat-card"><div class="num" id="cnt-dep">0</div><div class="lbl">Dependencias</div></div>
+    </div>
+
+    <div class="form-card">
+      <h3>Nuevo item</h3>
+      <div class="form-group">
+        <label>Nombre y Apellido <span class="req" title="Obligatorio">*</span></label>
+        <input type="text" id="parking-nombre" required aria-required="true" placeholder="Escribí tu nombre y apellido" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>Célula</label>
+        <select id="celula-select">
+          <option value="">— Seleccioná una célula —</option>
+          <option>Atención Digital (Hablemos)</option>
+          <option>Online Banking</option>
+          <option>CEM</option>
+          <option>Onboardings</option>
+          <option>e-BE</option>
+          <option>Asistentes Virtuales (Sofia/LISA)</option>
+          <option>Banca Telefónica (Call Center)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tipo de item</label>
+        <div class="type-grid">
+          <div class="type-card" onclick="selectType('consulta',this)" role="button" tabindex="0">
+            <i class="ti ti-help-circle"></i>
+            <div class="type-label">Consulta</div>
+            <div class="type-desc">Pregunta o duda</div>
+          </div>
+          <div class="type-card" onclick="selectType('profundizar',this)" role="button" tabindex="0">
+            <i class="ti ti-zoom-in"></i>
+            <div class="type-label">A profundizar</div>
+            <div class="type-desc">Tema a desarrollar</div>
+          </div>
+          <div class="type-card" onclick="selectType('dependencia',this)" role="button" tabindex="0">
+            <i class="ti ti-arrows-transfer-up"></i>
+            <div class="type-label">Dependencia</div>
+            <div class="type-desc">Coordinación necesaria</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Descripción</label>
+        <textarea id="parking-desc" placeholder="Describí el tema, contexto o lo que necesitás revisar o coordinar..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="submitParking()">
+        <i class="ti ti-send"></i> Agregar al Parking Lot
+      </button>
+    </div>
+
+    <div class="results-section">
+      <h3>Items registrados</h3>
+      <div class="parking-list" id="parking-list">
+        <div class="empty-state"><i class="ti ti-parking"></i>Aún no hay items en el parking lot</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-retro">
+    <div class="section-intro">
+      <div class="section-tag">Q Planning Q4 · 2026</div>
+      <h2>Retro de cierre</h2>
+      <p>Antes de concluir, dedicamos unos minutos a reflexionar sobre este encuentro. Tu opinión es clave para continuar fortaleciendo el espacio de Q Planning.</p>
+    </div>
+
+    <div class="form-card">
+      <h3>Tu feedback</h3>
+      <div class="form-group">
+        <label>Nombre y Apellido <span class="req" title="Obligatorio">*</span></label>
+        <input type="text" id="retro-nombre" required aria-required="true" placeholder="Escribí tu nombre y apellido" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>¿Cómo evaluás el encuentro de hoy?</label>
+        <div class="star-row" id="star-row">
+          <button class="star-btn" onclick="setRating(1)" title="1">★</button>
+          <button class="star-btn" onclick="setRating(2)" title="2">★</button>
+          <button class="star-btn" onclick="setRating(3)" title="3">★</button>
+          <button class="star-btn" onclick="setRating(4)" title="4">★</button>
+          <button class="star-btn" onclick="setRating(5)" title="5">★</button>
+        </div>
+      </div>
+      <div class="retro-grid">
+        <div class="retro-col">
+          <h4 class="green"><i class="ti ti-thumb-up"></i> Utilidad</h4>
+          <textarea id="retro-util" placeholder="¿Qué aspecto del encuentro te resultó más útil o relevante para tu trabajo diario?"></textarea>
+        </div>
+        <div class="retro-col">
+          <h4 class="blue"><i class="ti ti-tool"></i> Oportunidades de mejora</h4>
+          <textarea id="retro-mejora" placeholder="¿Qué parte del ejercicio deberíamos mejorar o ajustar para el próximo encuentro?"></textarea>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="submitRetro()">
+        <i class="ti ti-send"></i> Enviar feedback
+      </button>
+    </div>
+
+    <div class="results-section" id="retro-results" style="display:none">
+      <h3>Respuestas recibidas</h3>
+      <div class="rating-bar" id="rating-bar"></div>
+      <div class="retro-answers" id="retro-answers"></div>
+    </div>
+    <div class="empty-state" id="retro-empty">
+      <i class="ti ti-mood-empty"></i>Aún no hay respuestas de retro
+    </div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6sb4aAeGTE_2NjFbeu9uLT1ZXHPIEmFvItKVfmIl6Iou7sdUaaqUk3j0_fxLbD1XOYA/exec';
+
+  let selectedType='', currentRating=0, parkingItems=[], retroItems=[];
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.getElementById('tab-'+tab).classList.add('active');
+    document.getElementById('panel-'+tab).classList.add('active');
+    window.location.hash = tab;
+  }
+  (function initTab() {
+    const hash = window.location.hash.replace('#','');
+    if (hash === 'retro' || hash === 'parking') switchTab(hash);
+  })();
+  function selectType(type,el) {
+    selectedType=type;
+    document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+  function showToast(msg) {
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2400);
+  }
+  function nombreValido(id,nombre) {
+    const el=document.getElementById(id);
+    const ok=nombre.split(/\s+/).filter(Boolean).length>=2;
+    el.classList.toggle('invalid',!ok);
+    if(!ok){showToast(nombre?'Completá nombre y apellido':'El nombre y apellido es obligatorio');el.focus();}
+    return ok;
+  }
+  ['parking-nombre','retro-nombre'].forEach(id=>document.getElementById(id).addEventListener('input',e=>e.target.classList.remove('invalid')));
+  function updateStats() {
+    document.getElementById('cnt-total').textContent=parkingItems.length;
+    document.getElementById('cnt-consul').textContent=parkingItems.filter(i=>i.type==='consulta').length;
+    document.getElementById('cnt-profund').textContent=parkingItems.filter(i=>i.type==='profundizar').length;
+    document.getElementById('cnt-dep').textContent=parkingItems.filter(i=>i.type==='dependencia').length;
+  }
+  function submitParking() {
+    const nombre=document.getElementById('parking-nombre').value.trim();
+    const celula=document.getElementById('celula-select').value;
+    const desc=document.getElementById('parking-desc').value.trim();
+    if(!nombreValido('parking-nombre',nombre))return;
+    if(!celula){showToast('Seleccioná una célula');return;}
+    if(!selectedType){showToast('Elegí el tipo de item');return;}
+    if(!desc){showToast('Escribí una descripción');return;}
+    parkingItems.unshift({nombre,celula,type:selectedType,desc,time:new Date()});
+    renderParking(); updateStats();
+    if (APPS_SCRIPT_URL !== 'PEGAR_URL_AQUI') {
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          sheet: 'ParkingLot',
+          timestamp: new Date().toISOString(),
+          celula,
+          tipo: selectedType,
+          descripcion: desc,
+          nombre
+        })
+      }).catch(err => console.warn('No se pudo guardar en sheet:', err));
+    }
+    document.getElementById('parking-nombre').value='';
+    document.getElementById('celula-select').value='';
+    document.getElementById('parking-desc').value='';
+    document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+    selectedType='';
+    showToast('✓ Item agregado al Parking Lot');
+  }
+  function renderParking() {
+    const list=document.getElementById('parking-list');
+    if(!parkingItems.length){list.innerHTML='<div class="empty-state"><i class="ti ti-parking"></i>Aún no hay items en el parking lot</div>';return;}
+    const labels={consulta:'Consulta',profundizar:'A profundizar',dependencia:'Dependencia'};
+    const bc={consulta:'badge-teal',profundizar:'badge-blue',dependencia:'badge-amber'};
+    const lc={consulta:'#005458',profundizar:'#01866C',dependencia:'#C9772E'};
+    list.innerHTML=parkingItems.map(item=>{
+      const d=item.time,hm=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getFullYear()).slice(-2);
+      return '<div class="parking-item" style="border-left-color:'+lc[item.type]+'">'
+        +'<div class="parking-item-top">'
+        +'<span class="badge badge-green">'+item.celula+'</span>'
+        +'<span class="badge '+bc[item.type]+'">'+labels[item.type]+'</span>'
+        +'</div><p>'+item.desc+'</p><div class="ts">'+(item.nombre?item.nombre+' · ':'')+hm+'</div></div>';
+    }).join('');
+  }
+  function setRating(n) {
+    currentRating=n;
+    document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('active',i<n));
+  }
+  function submitRetro() {
+    const nombre=document.getElementById('retro-nombre').value.trim();
+    const util=document.getElementById('retro-util').value.trim();
+    const mejora=document.getElementById('retro-mejora').value.trim();
+    if(!nombreValido('retro-nombre',nombre))return;
+    if(!currentRating){showToast('Puntuá el encuentro');return;}
+    if(!util&&!mejora){showToast('Completá al menos un campo');return;}
+    retroItems.unshift({nombre,rating:currentRating,util,mejora});
+    renderRetro();
+    if (APPS_SCRIPT_URL !== 'PEGAR_URL_AQUI') {
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          sheet: 'Retro',
+          timestamp: new Date().toISOString(),
+          rating: currentRating,
+          utilidad: util,
+          mejora,
+          nombre
+        })
+      }).catch(err => console.warn('No se pudo guardar en sheet:', err));
+    }
+    document.getElementById('retro-nombre').value='';
+    document.getElementById('retro-util').value='';
+    document.getElementById('retro-mejora').value='';
+    setRating(0);
+    showToast('✓ Gracias por tu feedback!');
+  }
+  function renderRetro() {
+    const res=document.getElementById('retro-results');
+    const emp=document.getElementById('retro-empty');
+    if(!retroItems.length){res.style.display='none';emp.style.display='block';return;}
+    res.style.display='block'; emp.style.display='none';
+    const avg=(retroItems.reduce((s,i)=>s+i.rating,0)/retroItems.length).toFixed(1);
+    document.getElementById('rating-bar').innerHTML='<i class="ti ti-star-filled"></i> Promedio: <strong>'+avg+' / 5</strong> &nbsp;·&nbsp; '+retroItems.length+' respuesta'+(retroItems.length!==1?'s':'');
+    let html='';
+    retroItems.forEach(item=>{
+      if(item.util) html+='<div class="retro-answer-item"><div class="dot green"></div><div>'+item.util+'</div></div>';
+      if(item.mejora) html+='<div class="retro-answer-item"><div class="dot blue"></div><div>'+item.mejora+'</div></div>';
+    });
+    document.getElementById('retro-answers').innerHTML=html;
+  }
+</script>
+</body>
+</html>

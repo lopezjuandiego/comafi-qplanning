@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Q Planning Q4 — Banco Comafi</title>
+<title>Quarter Planning Q4 · Dominio Productos — Banco Comafi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -125,6 +125,20 @@
   .form-group input.invalid { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
   .form-group textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
 
+  /* ── DOMINIO ────────────────────────────── */
+  .dominio-box {
+    border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 1.75rem;
+  }
+  .dominio-box .dominio-lbl {
+    font-size: 12px; font-weight: 600; color: var(--brand-dark); text-transform: uppercase;
+    letter-spacing: .04em; margin-bottom: 8px;
+  }
+  .dominio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dominio-card { padding: 12px; display: flex; align-items: center; gap: 10px; text-align: left; }
+  .dominio-card.selected { padding: 11px; }
+  .dominio-card i { margin-bottom: 0; font-size: 22px; }
+  .dominio-box.invalid { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
+
   /* ── TYPE CARDS ─────────────────────────── */
   .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
   .type-card {
@@ -241,6 +255,7 @@
     header h1 { font-size: 1.3rem; }
     .stats-row { grid-template-columns: repeat(2,1fr); }
     .type-grid { grid-template-columns: 1fr; }
+    .dominio-grid { grid-template-columns: 1fr; }
     .retro-grid { grid-template-columns: 1fr; }
     .tab-btn { flex: 1; justify-content: center; padding: 12px 8px; }
     main { padding: 1.25rem 16px 2.5rem; }
@@ -254,8 +269,8 @@
 <header>
   <div class="hdr-logo"><img src="/logo_comafi.png" alt="Comafi"></div>
   <div class="hdr-text">
-    <h1>Q Planning Q4</h1>
-    <p>Dominio Canales · Banco Comafi · 2026</p>
+    <h1>Quarter Planning Q4</h1>
+    <p>Dominio Productos · Banco Comafi · 2026</p>
   </div>
 </header>
 
@@ -270,9 +285,23 @@
 
 <main>
 
+  <div class="dominio-box" id="dominio-box">
+    <div class="dominio-lbl">Dominio <span class="req" title="Obligatorio">*</span></div>
+    <div class="dominio-grid">
+      <div class="type-card dominio-card" data-dominio="Productos de Inversiones" onclick="selectDominio(this)" role="button" tabindex="0">
+        <i class="ti ti-chart-line"></i>
+        <div><div class="type-label">Productos de Inversiones</div><div class="type-desc">13 células</div></div>
+      </div>
+      <div class="type-card dominio-card" data-dominio="Productos Bancarios" onclick="selectDominio(this)" role="button" tabindex="0">
+        <i class="ti ti-building-bank"></i>
+        <div><div class="type-label">Productos Bancarios</div><div class="type-desc">20 células</div></div>
+      </div>
+    </div>
+  </div>
+
   <div class="panel active" id="panel-parking">
     <div class="section-intro">
-      <div class="section-tag">Q Planning Q4 · 2026</div>
+      <div class="section-tag">Quarter Planning Q4 · Dominio Productos</div>
       <h2>Parking Lot</h2>
       <p>Dejá tu consulta, dependencia o tema a profundizar. Lo abordaremos durante el encuentro o quedará agendado.</p>
     </div>
@@ -293,14 +322,7 @@
       <div class="form-group">
         <label>Célula</label>
         <select id="celula-select">
-          <option value="">— Seleccioná una célula —</option>
-          <option>Atención Digital (Hablemos)</option>
-          <option>Online Banking</option>
-          <option>CEM</option>
-          <option>Onboardings</option>
-          <option>e-BE</option>
-          <option>Asistentes Virtuales (Sofia/LISA)</option>
-          <option>Banca Telefónica (Call Center)</option>
+          <option value="">— Primero elegí el dominio —</option>
         </select>
       </div>
       <div class="form-group">
@@ -342,7 +364,7 @@
 
   <div class="panel" id="panel-retro">
     <div class="section-intro">
-      <div class="section-tag">Q Planning Q4 · 2026</div>
+      <div class="section-tag">Quarter Planning Q4 · Dominio Productos</div>
       <h2>Retro de cierre</h2>
       <p>Antes de concluir, dedicamos unos minutos a reflexionar sobre este encuentro. Tu opinión es clave para continuar fortaleciendo el espacio de Q Planning.</p>
     </div>
@@ -395,7 +417,44 @@
 <script>
   const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6sb4aAeGTE_2NjFbeu9uLT1ZXHPIEmFvItKVfmIl6Iou7sdUaaqUk3j0_fxLbD1XOYA/exec';
 
-  let selectedType='', currentRating=0, parkingItems=[], retroItems=[];
+  const CELULAS = {
+    'Productos de Inversiones': [
+      'Middle Office - Custodia - IIPP','Custodia Cedears','Custodia FCI','Blotter','Nefi',
+      'Fondos Comunes de Inversión','Siscon','Automatización','Bursátil','Backoffice Contaduría',
+      'PHs de Procesos y Eventos','PHs de Documentos','PHs de Permisos y Accesos'
+    ],
+    'Productos Bancarios': [
+      'Tarjeta de Crédito','Nubi Tarjetas','Conciliación Tarjetas de Crédito','ApiBanking','Alianzas B2B',
+      'Comex','CVU Collect','Echeq','Remesas NUBI','Transferencias','Pago de Sueldos','PH Pagos',
+      'PH Tarjetas','Préstamos','Depósito y Descuento de Documentos','Cuore','Sidels','Prendas',
+      'Seguros','Pasivas'
+    ]
+  };
+
+  let selectedType='', selectedDominio='', currentRating=0, parkingItems=[], retroItems=[];
+
+  function selectDominio(el) {
+    selectedDominio=el.dataset.dominio;
+    document.querySelectorAll('.dominio-card').forEach(c=>c.classList.toggle('selected',c===el));
+    document.getElementById('dominio-box').classList.remove('invalid');
+    const sel=document.getElementById('celula-select');
+    sel.innerHTML='<option value="">— Seleccioná una célula —</option>'
+      +CELULAS[selectedDominio].map(c=>'<option>'+c+'</option>').join('');
+    try{localStorage.setItem('qp-dominio',selectedDominio);}catch(e){}
+  }
+  (function initDominio() {
+    let d=''; try{d=localStorage.getItem('qp-dominio')||'';}catch(e){}
+    const el=document.querySelector('.dominio-card[data-dominio="'+d+'"]');
+    if(el) selectDominio(el);
+  })();
+  function dominioValido() {
+    if(selectedDominio) return true;
+    const box=document.getElementById('dominio-box');
+    box.classList.add('invalid');
+    box.scrollIntoView({behavior:'smooth',block:'center'});
+    showToast('Elegí el dominio');
+    return false;
+  }
 
   function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -410,7 +469,7 @@
   })();
   function selectType(type,el) {
     selectedType=type;
-    document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+    document.querySelectorAll('.type-card:not(.dominio-card)').forEach(c=>c.classList.remove('selected'));
     el.classList.add('selected');
   }
   function showToast(msg) {
@@ -436,6 +495,7 @@
     const nombre=document.getElementById('parking-nombre').value.trim();
     const celula=document.getElementById('celula-select').value;
     const desc=document.getElementById('parking-desc').value.trim();
+    if(!dominioValido())return;
     if(!nombreValido('parking-nombre',nombre))return;
     if(!celula){showToast('Seleccioná una célula');return;}
     if(!selectedType){showToast('Elegí el tipo de item');return;}
@@ -453,14 +513,15 @@
           celula,
           tipo: selectedType,
           descripcion: desc,
-          nombre
+          nombre,
+          dominio: selectedDominio
         })
       }).catch(err => console.warn('No se pudo guardar en sheet:', err));
     }
     document.getElementById('parking-nombre').value='';
     document.getElementById('celula-select').value='';
     document.getElementById('parking-desc').value='';
-    document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
+    document.querySelectorAll('.type-card:not(.dominio-card)').forEach(c=>c.classList.remove('selected'));
     selectedType='';
     showToast('✓ Item agregado al Parking Lot');
   }
@@ -487,6 +548,7 @@
     const nombre=document.getElementById('retro-nombre').value.trim();
     const util=document.getElementById('retro-util').value.trim();
     const mejora=document.getElementById('retro-mejora').value.trim();
+    if(!dominioValido())return;
     if(!nombreValido('retro-nombre',nombre))return;
     if(!currentRating){showToast('Puntuá el encuentro');return;}
     if(!util&&!mejora){showToast('Completá al menos un campo');return;}
@@ -503,7 +565,8 @@
           rating: currentRating,
           utilidad: util,
           mejora,
-          nombre
+          nombre,
+          dominio: selectedDominio
         })
       }).catch(err => console.warn('No se pudo guardar en sheet:', err));
     }

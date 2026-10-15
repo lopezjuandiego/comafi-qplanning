@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resultados Q Planning Q4 — Banco Comafi</title>
+<title>Resultados Quarter Planning Q4 · Dominio Productos — Banco Comafi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -118,6 +118,10 @@
   .metric-lbl { font-size: .72rem; color: var(--brand-dark); text-transform: uppercase; letter-spacing: .04em; }
 
   /* ── SECTION HEADER ── */
+  .dominio-head {
+    grid-column: 1 / -1; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--brand-dark); background: var(--tint); padding: 6px 10px; margin-top: 6px;
+  }
   .section-header {
     display: flex; align-items: center; gap: 8px;
     margin-bottom: 1.1rem; padding-bottom: 5px;
@@ -222,8 +226,8 @@
 <header>
   <div class="hdr-logo"><img src="/logo_comafi.png" alt="Comafi"></div>
   <div class="hdr-text">
-    <h1>Resultados Q Planning Q4</h1>
-    <p>Dominio Canales · Banco Comafi · 2026</p>
+    <h1>Resultados Quarter Planning Q4</h1>
+    <p>Dominio Productos · Banco Comafi · 2026</p>
   </div>
 </header>
 
@@ -249,7 +253,7 @@
   <div id="content" style="display:none">
 
     <div class="section-intro">
-      <div class="section-tag">Q Planning Q4 · 2026</div>
+      <div class="section-tag">Quarter Planning Q4 · Dominio Productos</div>
       <h2>Resultados del encuentro</h2>
       <p>Datos en vivo del Parking Lot.</p>
     </div>
@@ -321,6 +325,26 @@
   const DESDE = new Date('2026-10-01T00:00:00-03:00');
   const enEdicion = i => !i.timestamp || new Date(i.timestamp) >= DESDE;
 
+  // Misma lista que index.html. El Sheet también tiene Canales Q4 (archivado en /canales-q4):
+  // acá solo se muestran células de Productos, agrupadas por dominio.
+  const CELULAS = {
+    'Productos de Inversiones': [
+      'Middle Office - Custodia - IIPP','Custodia Cedears','Custodia FCI','Blotter','Nefi',
+      'Fondos Comunes de Inversión','Siscon','Automatización','Bursátil','Backoffice Contaduría',
+      'PHs de Procesos y Eventos','PHs de Documentos','PHs de Permisos y Accesos'
+    ],
+    'Productos Bancarios': [
+      'Tarjeta de Crédito','Nubi Tarjetas','Conciliación Tarjetas de Crédito','ApiBanking','Alianzas B2B',
+      'Comex','CVU Collect','Echeq','Remesas NUBI','Transferencias','Pago de Sueldos','PH Pagos',
+      'PH Tarjetas','Préstamos','Depósito y Descuento de Documentos','Cuore','Sidels','Prendas',
+      'Seguros','Pasivas'
+    ]
+  };
+  const DOMINIO_DE = {};
+  Object.entries(CELULAS).forEach(([d, cs]) => cs.forEach(c => DOMINIO_DE[c] = d));
+  const esProductosPL = i => enEdicion(i) && DOMINIO_DE[i.celula];
+  const esProductosRetro = i => enEdicion(i) && CELULAS[i.dominio];
+
   const TYPE_LABEL = { consulta: 'Consulta', profundizar: 'A profundizar', dependencia: 'Dependencia' };
   const TYPE_BADGE = { consulta: 'badge-blue', profundizar: 'badge-green', dependencia: 'badge-orange' };
 
@@ -352,7 +376,7 @@
       const res = await fetch(APPS_SCRIPT_URL);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
-      renderAll((data.parkingLot || []).filter(enEdicion), (data.retro || []).filter(enEdicion));
+      renderAll((data.parkingLot || []).filter(esProductosPL), (data.retro || []).filter(esProductosRetro));
       hide('state-loading');
       show('content');
     } catch (err) {
@@ -398,7 +422,7 @@
       if (!grouped[item.celula]) grouped[item.celula] = [];
       grouped[item.celula].push(item);
     });
-    grid.innerHTML = Object.entries(grouped).map(([celula, list]) => `
+    const card = (celula, list) => `
       <div class="celula-card">
         <div class="celula-head">
           <span class="celula-name">${esc(celula)}</span>
@@ -412,7 +436,14 @@
               ${item.nombre ? `<span class="pl-author"><i class="ti ti-user"></i>${esc(item.nombre)}</span>` : ''}
             </div>`).join('')}
         </div>
-      </div>`).join('');
+      </div>`;
+    grid.innerHTML = Object.entries(CELULAS).map(([dominio, celulas]) => {
+      const conItems = celulas.filter(c => grouped[c]);
+      if (!conItems.length) return '';
+      const n = conItems.reduce((s, c) => s + grouped[c].length, 0);
+      return `<div class="dominio-head">${esc(dominio)} · ${n} ítem${n !== 1 ? 's' : ''}</div>`
+        + conItems.map(c => card(c, grouped[c])).join('');
+    }).join('');
   }
 
   function renderRetro(items) {
