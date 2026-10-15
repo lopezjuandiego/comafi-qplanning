@@ -122,22 +122,8 @@
     border-color: var(--brand); box-shadow: 0 0 0 3px rgba(1,134,108,0.15);
   }
   .req { color: #c0392b; font-weight: 700; }
-  .form-group input.invalid { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
+  .form-group input.invalid, .form-group select.invalid { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
   .form-group textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
-
-  /* ── DOMINIO ────────────────────────────── */
-  .dominio-box {
-    border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 1.75rem;
-  }
-  .dominio-box .dominio-lbl {
-    font-size: 12px; font-weight: 600; color: var(--brand-dark); text-transform: uppercase;
-    letter-spacing: .04em; margin-bottom: 8px;
-  }
-  .dominio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .dominio-card { padding: 12px; display: flex; align-items: center; gap: 10px; text-align: left; }
-  .dominio-card.selected { padding: 11px; }
-  .dominio-card i { margin-bottom: 0; font-size: 22px; }
-  .dominio-box.invalid { border-color: #c0392b; box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
 
   /* ── TYPE CARDS ─────────────────────────── */
   .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -255,7 +241,6 @@
     header h1 { font-size: 1.3rem; }
     .stats-row { grid-template-columns: repeat(2,1fr); }
     .type-grid { grid-template-columns: 1fr; }
-    .dominio-grid { grid-template-columns: 1fr; }
     .retro-grid { grid-template-columns: 1fr; }
     .tab-btn { flex: 1; justify-content: center; padding: 12px 8px; }
     main { padding: 1.25rem 16px 2.5rem; }
@@ -285,20 +270,6 @@
 
 <main>
 
-  <div class="dominio-box" id="dominio-box">
-    <div class="dominio-lbl">Dominio <span class="req" title="Obligatorio">*</span></div>
-    <div class="dominio-grid">
-      <div class="type-card dominio-card" data-dominio="Productos de Inversiones" onclick="selectDominio(this)" role="button" tabindex="0">
-        <i class="ti ti-chart-line"></i>
-        <div><div class="type-label">Productos de Inversiones</div><div class="type-desc">13 células</div></div>
-      </div>
-      <div class="type-card dominio-card" data-dominio="Productos Bancarios" onclick="selectDominio(this)" role="button" tabindex="0">
-        <i class="ti ti-building-bank"></i>
-        <div><div class="type-label">Productos Bancarios</div><div class="type-desc">20 células</div></div>
-      </div>
-    </div>
-  </div>
-
   <div class="panel active" id="panel-parking">
     <div class="section-intro">
       <div class="section-tag">Quarter Planning Q4 · Dominio Productos</div>
@@ -318,6 +289,14 @@
       <div class="form-group">
         <label>Nombre y Apellido <span class="req" title="Obligatorio">*</span></label>
         <input type="text" id="parking-nombre" required aria-required="true" placeholder="Escribí tu nombre y apellido" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>Dominio <span class="req" title="Obligatorio">*</span></label>
+        <select id="parking-dominio" class="dominio-select" onchange="setDominio(this.value)">
+          <option value="">— Seleccioná un dominio —</option>
+          <option>Productos de Inversiones</option>
+          <option>Productos Bancarios</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Célula</label>
@@ -374,6 +353,14 @@
       <div class="form-group">
         <label>Nombre y Apellido <span class="req" title="Obligatorio">*</span></label>
         <input type="text" id="retro-nombre" required aria-required="true" placeholder="Escribí tu nombre y apellido" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>Dominio <span class="req" title="Obligatorio">*</span></label>
+        <select id="retro-dominio" class="dominio-select" onchange="setDominio(this.value)">
+          <option value="">— Seleccioná un dominio —</option>
+          <option>Productos de Inversiones</option>
+          <option>Productos Bancarios</option>
+        </select>
       </div>
       <div class="form-group">
         <label>¿Cómo evaluás el encuentro de hoy?</label>
@@ -433,26 +420,24 @@
 
   let selectedType='', selectedDominio='', currentRating=0, parkingItems=[], retroItems=[];
 
-  function selectDominio(el) {
-    selectedDominio=el.dataset.dominio;
-    document.querySelectorAll('.dominio-card').forEach(c=>c.classList.toggle('selected',c===el));
-    document.getElementById('dominio-box').classList.remove('invalid');
+  function setDominio(d) {
+    selectedDominio=CELULAS[d]?d:'';
+    document.querySelectorAll('.dominio-select').forEach(el=>{el.value=selectedDominio;if(selectedDominio)el.classList.remove('invalid');});
     const sel=document.getElementById('celula-select');
-    sel.innerHTML='<option value="">— Seleccioná una célula —</option>'
-      +CELULAS[selectedDominio].map(c=>'<option>'+c+'</option>').join('');
+    sel.innerHTML=selectedDominio
+      ?'<option value="">— Seleccioná una célula —</option>'+CELULAS[selectedDominio].map(c=>'<option>'+c+'</option>').join('')
+      :'<option value="">— Primero elegí el dominio —</option>';
     try{localStorage.setItem('qp-dominio',selectedDominio);}catch(e){}
   }
   (function initDominio() {
     let d=''; try{d=localStorage.getItem('qp-dominio')||'';}catch(e){}
-    const el=document.querySelector('.dominio-card[data-dominio="'+d+'"]');
-    if(el) selectDominio(el);
+    setDominio(d);
   })();
-  function dominioValido() {
+  function dominioValido(id) {
     if(selectedDominio) return true;
-    const box=document.getElementById('dominio-box');
-    box.classList.add('invalid');
-    box.scrollIntoView({behavior:'smooth',block:'center'});
-    showToast('Elegí el dominio');
+    const el=document.getElementById(id);
+    el.classList.add('invalid'); el.focus();
+    showToast('Seleccioná el dominio');
     return false;
   }
 
@@ -469,7 +454,7 @@
   })();
   function selectType(type,el) {
     selectedType=type;
-    document.querySelectorAll('.type-card:not(.dominio-card)').forEach(c=>c.classList.remove('selected'));
+    document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
     el.classList.add('selected');
   }
   function showToast(msg) {
@@ -495,8 +480,8 @@
     const nombre=document.getElementById('parking-nombre').value.trim();
     const celula=document.getElementById('celula-select').value;
     const desc=document.getElementById('parking-desc').value.trim();
-    if(!dominioValido())return;
     if(!nombreValido('parking-nombre',nombre))return;
+    if(!dominioValido('parking-dominio'))return;
     if(!celula){showToast('Seleccioná una célula');return;}
     if(!selectedType){showToast('Elegí el tipo de item');return;}
     if(!desc){showToast('Escribí una descripción');return;}
@@ -521,7 +506,7 @@
     document.getElementById('parking-nombre').value='';
     document.getElementById('celula-select').value='';
     document.getElementById('parking-desc').value='';
-    document.querySelectorAll('.type-card:not(.dominio-card)').forEach(c=>c.classList.remove('selected'));
+    document.querySelectorAll('.type-card').forEach(c=>c.classList.remove('selected'));
     selectedType='';
     showToast('✓ Item agregado al Parking Lot');
   }
@@ -548,8 +533,8 @@
     const nombre=document.getElementById('retro-nombre').value.trim();
     const util=document.getElementById('retro-util').value.trim();
     const mejora=document.getElementById('retro-mejora').value.trim();
-    if(!dominioValido())return;
     if(!nombreValido('retro-nombre',nombre))return;
+    if(!dominioValido('retro-dominio'))return;
     if(!currentRating){showToast('Puntuá el encuentro');return;}
     if(!util&&!mejora){showToast('Completá al menos un campo');return;}
     retroItems.unshift({nombre,rating:currentRating,util,mejora});
